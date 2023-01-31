@@ -11,6 +11,13 @@ const connection = mysql.createPool({
 });
 
 app.get("/", (req, res) => {
+  var sql = "INSERT INTO People(people_name) VALUES('Vinicius Campelo')";
+  
+  connection.query(sql, function (err, result) {
+    if (err) throw err;
+    console.log("1 record inserted");
+  });
+
   connection.query("SELECT * FROM People", (err, rows) => {
     if (err) {
       res.json({
@@ -20,10 +27,11 @@ app.get("/", (req, res) => {
     } else {
       res.json({
         success: true,
+        message: '<h1>Full Cycle Rocks!</h1>',
         rows,
       });
     }
   });
 });
 
-app.listen(5000, () => console.log("listining on port 5000"));
+app.listen(3000, () => console.log("listining on port 3000"));

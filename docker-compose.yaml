@@ -1,16 +1,5 @@
 version: "3.8"
 services:
-  nginx:
-    build:
-      context: ./nginx
-      dockerfile: Dockerfile
-    container_name: nginx 
-    networks:
-      - node-network
-    ports:
-      - "8080:80"
-    depends_on:
-      - node
   db:
     build: ./db
     environment:
@@ -20,21 +9,37 @@ services:
     networks: 
       - node-network
 
-  node:
+  nodejs-app:
     build: ./node
+    container_name: nodejsserver
+    hostname: nodejsserver
     environment:
       MYSQL_DATABASE: test
       MYSQL_USER: root
       MYSQL_PASSWORD: password
       MYSQL_HOST: db
     ports:
-      - "5000:5000"
+      - "3000:3000"
     depends_on:
       - db
     restart: on-failure
     networks: 
       - node-network
 
-networks:
+  nginx:
+    build:
+      context: ./nginx
+    container_name: nginx
+    hostname: nginx
+    ports:
+      - "8080:80"
+    depends_on:
+        - nodejs-app
+    networks: 
+      - node-network
+
+networks: 
   node-network:
-    driver: bridge
+    driver: bridge   
+
+
