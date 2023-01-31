@@ -1,1 +1,0 @@
-# full-cycle-desafio-docker-nginx
