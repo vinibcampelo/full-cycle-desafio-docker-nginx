@@ -13,6 +13,8 @@ services:
     build: ./node
     container_name: nodejsserver
     hostname: nodejsserver
+    entrypoint: dockerize -wait tcp://db:3306 -timeout 20s docker-entrypoint.sh
+    tty: true
     environment:
       MYSQL_DATABASE: test
       MYSQL_USER: root
