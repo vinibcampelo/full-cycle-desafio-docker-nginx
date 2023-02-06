@@ -6,27 +6,23 @@ services:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: test
     restart: always
-    networks: 
-      - node-network
+    volumes:
+      - ./mysql:/var/lib/mysql
 
   nodejs-app:
     build: ./node
     container_name: nodejsserver
     hostname: nodejsserver
-    entrypoint: dockerize -wait tcp://db:3306 -timeout 20s docker-entrypoint.sh npm start
+    entrypoint: dockerize -wait tcp://db:3306 -timeout 20s npm start
     tty: true
     environment:
       MYSQL_DATABASE: test
       MYSQL_USER: root
       MYSQL_PASSWORD: password
       MYSQL_HOST: db
-    ports:
-      - "3000:3000"
     depends_on:
       - db
     restart: on-failure
-    networks: 
-      - node-network
 
   nginx:
     build:
@@ -37,11 +33,5 @@ services:
       - "8080:80"
     depends_on:
         - nodejs-app
-    networks: 
-      - node-network
-
-networks: 
-  node-network:
-    driver: bridge   
 
 
